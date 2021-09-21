@@ -10,32 +10,27 @@
 // if a node reaches 0, that branch perfectly adds up to the targetSum and therefore canSum returns true
 
 
-const canSum = (targetSum,numbers) => {
-
+const canSum = (targetSum,numbers,memo={}) => {
+    if(targetSum in memo)return memo[targetSum];
     if(targetSum===0) return true;
-
-    var targetSumHigh = false;
-    for(number in numbers){
-        if (targetSum > number){
-            targetSumHigh = true;
-            break; //if targetSum is less than all numbers, return false for this branch
-        }
-        
-    }
-    if(!targetSumHigh) return false;
     
-    for(number in numbers){
+    for(let number of numbers){
 
-        if((targetSum - number) >= 0 && canSum(targetSum-number,numbers)) return true;
+        if((targetSum - number) >= 0 && canSum(targetSum-number,numbers,memo)) {
+            memo[targetSum] = true;
+            return true;
+        }
     }
-    //return false;
+
+    memo[targetSum] = false;
+    return false;
 
 };
 
 
 
 console.log(canSum(7,[2,3])); //true
-// console.log(canSum(7,[5,3,4,7])); //true
-// console.log(canSum(7,[2,4])); //false
-// console.log(canSum(8,[2,3,5])); //true
-// console.log(canSum(300,[7,14])); //false
+console.log(canSum(7,[5,3,4,7])); //true
+console.log(canSum(7,[2,4])); //false
+console.log(canSum(8,[2,3,5])); //true
+console.log(canSum(300,[7,14])); //false
